@@ -9,6 +9,8 @@ import com.qgstudio.root.models.ResponseData;
 import com.qgstudio.root.service.QueryService;
 import com.qgstudio.root.utils.EmptyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,12 @@ import java.util.List;
  * @date 2019/5/25
  */
 @Service
+@Cacheable(cacheNames = "city_map")
 public class CircleQueryServiceImpl implements QueryService {
     @Autowired
     private Dao dao;
-
     @Override
+    @Cacheable(key ="#condition.month+#condition.day+#condition.hour" ,cacheNames = "city_map")
     public ResponseData queryCircleData(RequestData condition) {
         ResponseData responseData = new ResponseData();
         if (EmptyUtil.isEmpty(condition)) {
@@ -35,6 +38,11 @@ public class CircleQueryServiceImpl implements QueryService {
             for (CityCircle c : circleList) {
                 c.transfer();
             }
+            //do some transfer
+           /* for (CityCircle c : circleList) {
+                c.compute();
+                dao.updateCentrePoint(c.getCentreLon(),c.getCentreLat(),c.getId());
+            }*/
             responseData.setMsg(Message.OK.getMsg());
             responseData.setStatus(Status.OK.getStatus());
             responseData.setCircles(circleList);

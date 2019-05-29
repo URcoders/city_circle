@@ -25,4 +25,7 @@ public interface Dao {
             }
     )
     List<CityCircle> queryCityCle(@Param("month") String month, @Param("day") String day, @Param("hour") String hour);
+
+    @UpdateProvider(type = Processor.class, method = "computeCentrePointLonAndLat")
+    void updateCentrePoint(@Param("lon") double lon, @Param("lat") double lat, @Param("id") int id);
 }

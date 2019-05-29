@@ -22,6 +22,10 @@ public class CityCircle extends AbstractCircle<List<Point>> {
     @JsonIgnore
     private String hour;
     private List<Point> pointList;
+    @JsonIgnore
+    private double centreLon;
+    @JsonIgnore
+    private double centreLat;
     private static final String SPLIT_POINT = "\\|";
     private static final String SPLIT_LAT_LON = "\\:";
 
@@ -48,6 +52,25 @@ public class CityCircle extends AbstractCircle<List<Point>> {
         }
         pointList = list;
         return list;
+    }
+
+    /**
+     * compute centre point
+     *
+     * @return circle
+     */
+    public void compute() {
+        if (pointList != null) {
+            double avgLongitude = 0;
+            double avgLatitude = 0;
+            for (Point p : pointList) {
+                avgLatitude += p.getLatitude();
+                avgLongitude += p.getLongitude();
+            }
+            centreLat = avgLatitude / pointList.size();
+            centreLon = avgLongitude / pointList.size();
+        }
+       /* return this;*/
     }
 
     @Override
