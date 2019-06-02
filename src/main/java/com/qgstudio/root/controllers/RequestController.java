@@ -16,9 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class RequestController {
     @Autowired
     private QueryService queryService;
-    @GetMapping("/circle")
+
+    @PostMapping("/circle")
     public ResponseData getCircle(@RequestBody RequestData requestData) {
         return queryService.queryCircleData(requestData);
     }
 
+    @PostMapping("/route")
+    public ResponseData getRoute(@RequestBody RequestData requestData) {
+        return queryService.queryRouteCircleData(requestData);
+    }
 }

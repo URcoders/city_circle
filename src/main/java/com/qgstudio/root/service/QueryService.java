@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
  */
 public interface QueryService {
     /**
-     *
      * @param condition 查询条件
      * @return city data
      */
     ResponseData queryCircleData(RequestData condition);
+
+    ResponseData queryRouteCircleData(RequestData condition);
 }

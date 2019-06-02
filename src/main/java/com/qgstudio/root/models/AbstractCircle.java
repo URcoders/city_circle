@@ -1,6 +1,7 @@
 package com.qgstudio.root.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date 2019/5/25
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class AbstractCircle<T>{
     protected int id;
     protected String msg;
