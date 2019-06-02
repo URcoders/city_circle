@@ -16,4 +16,6 @@ public interface QueryService {
     ResponseData queryCircleData(RequestData condition);
 
     ResponseData queryRouteCircleData(RequestData condition);
+
+    void updateCircleMap();
 }

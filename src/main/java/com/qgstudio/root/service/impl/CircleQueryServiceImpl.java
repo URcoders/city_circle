@@ -67,7 +67,7 @@ public class CircleQueryServiceImpl implements QueryService {
         if (EmptyUtil.isEmpty(condition)) {
             //处理空的查询条件
         }
-        List<RouteCityCircle> routeCityCircleList = new LinkedList<>();
+        List<RouteCityCircle> routeCityCircleList ;
         routeCityCircleList = dao.queryRouteCityCircle(condition.getMonth(), condition.getHour(), condition.getDay());
         for (RouteCityCircle c : routeCityCircleList
                 ) {
@@ -95,7 +95,6 @@ public class CircleQueryServiceImpl implements QueryService {
         responseData.setRouteList(routeCityCircleList);
         return responseData;
     }
-    @Scheduled(cron =" 0/50 * * * * ?")
     public void updateCircleMap(){
         for (int i = 0; i <150 ; i++) {
             RouteCityCircle circle=dao.selectCentrePointAndLonLat(i);

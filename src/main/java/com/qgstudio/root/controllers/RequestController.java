@@ -3,6 +3,7 @@ package com.qgstudio.root.controllers;
 import com.qgstudio.root.models.RequestData;
 import com.qgstudio.root.models.ResponseData;
 import com.qgstudio.root.service.QueryService;
+import com.qgstudio.root.service.impl.CircleQueryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,5 +26,15 @@ public class RequestController {
     @PostMapping("/route")
     public ResponseData getRoute(@RequestBody RequestData requestData) {
         return queryService.queryRouteCircleData(requestData);
+    }
+
+    @GetMapping("/update")
+    public String updateCacheMap(@RequestParam("auth") String auth) {
+        if ("linxu".equals(auth)) {
+            queryService.updateCircleMap();
+            return "Update OK!";
+        } else {
+            return "auth fail!";
+        }
     }
 }
