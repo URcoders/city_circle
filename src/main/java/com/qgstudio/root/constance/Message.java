@@ -12,6 +12,7 @@ public enum Message {
     TIME_OUT("处理超时！"),
     ERROR("服务器端出现异常！"),
     FORMAT_ERROR("数据格式错误，务必检查！"),
+    CIRCLE_NOT_EXIST("该区域不存在！")
     ;
 
     Message(String msg) {

@@ -25,7 +25,9 @@ public class RouteCityCircle extends AbstractCircle<List<Point>> {
     /**
      * 一对区域
      */
+    @JsonIgnore
     private List<Point> fromList;
+    @JsonIgnore
     private List<Point> toList;
     @JsonIgnore
     private List<Point> tempPointList;

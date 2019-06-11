@@ -2,6 +2,7 @@ package com.qgstudio.root.dao;
 
 import com.qgstudio.root.models.CityCircle;
 import com.qgstudio.root.models.RouteCityCircle;
+import com.qgstudio.root.models.SingleFlowCircle;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -51,6 +52,18 @@ public interface Dao {
             }
     )
     RouteCityCircle selectCentrePointAndLonLat(@Param("idx") int idx);
+
+    @Select("select * from circle where idx=#{idx}")
+    @Results({
+            @Result(property = "weight", column = "weight"),
+            @Result(property = "hour", column = "date_hour"),
+            @Result(property = "day", column = "date_day"),
+            @Result(property = "month",column = "date_month")
+    })
+    List<SingleFlowCircle> querySingleFlowCircleOneDay(@Param("idx") int idx);
+
+    @Select("select idx from circle where id=#{id}")
+    Integer queryIdxById(@Param("id") int id);
 
 
 }

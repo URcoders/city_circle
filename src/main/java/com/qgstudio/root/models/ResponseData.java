@@ -19,4 +19,5 @@ public class ResponseData {
     private Integer status;
     private List<CityCircle> circles;
     private List<RouteCityCircle> routeList;
+    private FlowCircle[] flowLines;
 }

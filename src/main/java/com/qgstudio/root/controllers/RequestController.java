@@ -1,9 +1,10 @@
 package com.qgstudio.root.controllers;
 
+import com.qgstudio.root.constance.Message;
+import com.qgstudio.root.constance.Status;
 import com.qgstudio.root.models.RequestData;
 import com.qgstudio.root.models.ResponseData;
 import com.qgstudio.root.service.QueryService;
-import com.qgstudio.root.service.impl.CircleQueryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,5 +37,19 @@ public class RequestController {
         } else {
             return "auth fail!";
         }
+    }
+
+    @GetMapping("/queryflow")
+    public ResponseData queryCircleFlow(@RequestParam("id") String id) {
+        Integer okId;
+        try {
+            okId = Integer.valueOf(id);
+        } catch (NumberFormatException e) {
+            ResponseData responseData = new ResponseData();
+            responseData.setStatus(Status.OK.getStatus());
+            responseData.setMsg(Message.FORMAT_ERROR.getMsg());
+            return responseData;
+        }
+        return queryService.queryCircleFlow(okId);
     }
 }

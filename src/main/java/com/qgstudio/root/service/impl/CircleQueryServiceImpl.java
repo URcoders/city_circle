@@ -3,10 +3,7 @@ package com.qgstudio.root.service.impl;
 import com.qgstudio.root.constance.Message;
 import com.qgstudio.root.constance.Status;
 import com.qgstudio.root.dao.Dao;
-import com.qgstudio.root.models.CityCircle;
-import com.qgstudio.root.models.RequestData;
-import com.qgstudio.root.models.ResponseData;
-import com.qgstudio.root.models.RouteCityCircle;
+import com.qgstudio.root.models.*;
 import com.qgstudio.root.service.QueryService;
 import com.qgstudio.root.utils.EmptyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +22,13 @@ import java.util.Map;
  * @date 2019/5/25
  */
 @Service
-@Cacheable(cacheNames = "city_map")
 public class CircleQueryServiceImpl implements QueryService {
-    private static final Map<Integer,RouteCityCircle> CIRCLE_MAP=new HashMap<>();
+    private static final Map<Integer, RouteCityCircle> CIRCLE_MAP = new HashMap<>();
     @Autowired
     private Dao dao;
 
     @Override
-    @Cacheable(key = "#condition.month+#condition.day+#condition.hour", cacheNames = "city_map",unless="#result == null")
+    @Cacheable(key = "#condition.month+#condition.day+#condition.hour", cacheNames = "city_map", unless = "#result == null")
     public ResponseData queryCircleData(RequestData condition) {
         ResponseData responseData = new ResponseData();
         if (EmptyUtil.isEmpty(condition)) {
@@ -46,10 +42,10 @@ public class CircleQueryServiceImpl implements QueryService {
                 c.transfer();
             }
             //do some transfer
-           /* for (CityCircle c : circleList) {
+            for (CityCircle c : circleList) {
                 c.compute();
-                dao.updateCentrePoint(c.getCentreLon(),c.getCentreLat(),c.getId());
-            }*/
+                dao.updateCentrePoint(c.getCentreLon(), c.getCentreLat(), c.getId());
+            }
             responseData.setMsg(Message.OK.getMsg());
             responseData.setStatus(Status.OK.getStatus());
             responseData.setCircles(circleList);
@@ -67,8 +63,8 @@ public class CircleQueryServiceImpl implements QueryService {
         if (EmptyUtil.isEmpty(condition)) {
             //处理空的查询条件
         }
-        List<RouteCityCircle> routeCityCircleList ;
-        routeCityCircleList = dao.queryRouteCityCircle(condition.getMonth(), condition.getHour(), condition.getDay());
+        List<RouteCityCircle> routeCityCircleList;
+        routeCityCircleList = dao.queryRouteCityCircle(condition.getMonth(), condition.getDay(), condition.getHour());
         for (RouteCityCircle c : routeCityCircleList
                 ) {
             //处理from
@@ -77,15 +73,15 @@ public class CircleQueryServiceImpl implements QueryService {
                 c.setFromCentreLon(routeCityCircle.getTempCentreLon());
                 c.setFromCentreLat(routeCityCircle.getTempCentreLat());
                 //c.setFromLonAndLat(routeCityCircle.getTempLonAndLat());
-                c.setFromList(routeCityCircle.getTempPointList());
+                //c.setFromList(routeCityCircle.getTempPointList());
             }
             //处理to
             RouteCityCircle routeCityCircle1 = CIRCLE_MAP.get(c.getToIndex());
-            if (routeCityCircle1!=null){
+            if (routeCityCircle1 != null) {
                 c.setToCentreLon(routeCityCircle1.getTempCentreLon());
                 c.setToCentreLat(routeCityCircle1.getTempCentreLat());
                 //c.setToLonAndLat(routeCityCircle1.getTempLonAndLat());
-                c.setToList(routeCityCircle1.getTempPointList());
+                //c.setToList(routeCityCircle1.getTempPointList());
             }
             /*//处理成功，则进行合并计算；
             c.transfer();*/
@@ -95,11 +91,53 @@ public class CircleQueryServiceImpl implements QueryService {
         responseData.setRouteList(routeCityCircleList);
         return responseData;
     }
-    public void updateCircleMap(){
-        for (int i = 0; i <150 ; i++) {
-            RouteCityCircle circle=dao.selectCentrePointAndLonLat(i);
-            if (circle!=null)circle.transferOutLine();
-            CIRCLE_MAP.put(i,circle);
+
+    public void updateCircleMap() {
+        for (int i = 0; i < 150; i++) {
+            RouteCityCircle circle = dao.selectCentrePointAndLonLat(i);
+            //if (circle!=null)circle.transferOutLine();
+            CIRCLE_MAP.put(i, circle);
         }
+    }
+
+    @Override
+    public ResponseData queryCircleFlow(int id) {
+        ResponseData responseData=new ResponseData();
+        //这里要使用Integer去查找，因为有的返回IDX为0，否则无法判断
+        Integer idx = dao.queryIdxById(id);
+        List<SingleFlowCircle> list = new LinkedList<>();
+        if (idx != null) {
+            list = dao.querySingleFlowCircleOneDay(idx);
+        }else {
+            responseData.setStatus(Status.OK.getStatus());
+            responseData.setMsg(Message.CIRCLE_NOT_EXIST.getMsg());
+            return responseData;
+        }
+
+        FlowCircle[] flowCircles59Lines=new FlowCircle[59];
+        //init
+        for (int i = 0; i < 59; i++) {
+            flowCircles59Lines[i]=new FlowCircle();
+            flowCircles59Lines[i].mapInit();
+            flowCircles59Lines[i].setDay(i+1);
+        }
+        for (SingleFlowCircle s:list
+             ) {
+            if ("2".equals(s.getMonth())){
+                //一根线   range 0-27
+                FlowCircle line=  flowCircles59Lines[Integer.valueOf(s.getDay())-1];
+                HashMap<String,Double> map=(HashMap<String, Double>) line.getTimeMap();
+                map.put(s.getHour(),s.getWeight());
+            }else {
+                //3月
+                FlowCircle line=  flowCircles59Lines[Integer.valueOf(s.getDay())+27];
+                Map map=line.getTimeMap();
+                map.put(s.getHour(),s.getWeight());
+            }
+        }
+        responseData.setStatus(Status.OK.getStatus());
+        responseData.setMsg(Message.OK.getMsg());
+        responseData.setFlowLines(flowCircles59Lines);
+        return responseData;
     }
 }

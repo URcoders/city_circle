@@ -18,4 +18,6 @@ public interface QueryService {
     ResponseData queryRouteCircleData(RequestData condition);
 
     void updateCircleMap();
+
+    ResponseData queryCircleFlow(int id);
 }
