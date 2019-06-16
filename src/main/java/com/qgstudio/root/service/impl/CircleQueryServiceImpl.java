@@ -102,42 +102,68 @@ public class CircleQueryServiceImpl implements QueryService {
 
     @Override
     public ResponseData queryCircleFlow(int id) {
-        ResponseData responseData=new ResponseData();
+        ResponseData responseData = new ResponseData();
         //这里要使用Integer去查找，因为有的返回IDX为0，否则无法判断
         Integer idx = dao.queryIdxById(id);
         List<SingleFlowCircle> list = new LinkedList<>();
         if (idx != null) {
             list = dao.querySingleFlowCircleOneDay(idx);
-        }else {
+        } else {
             responseData.setStatus(Status.OK.getStatus());
             responseData.setMsg(Message.CIRCLE_NOT_EXIST.getMsg());
             return responseData;
         }
 
-        FlowCircle[] flowCircles59Lines=new FlowCircle[59];
+        FlowCircle[] flowCircles59Lines = new FlowCircle[59];
         //init
         for (int i = 0; i < 59; i++) {
-            flowCircles59Lines[i]=new FlowCircle();
+            flowCircles59Lines[i] = new FlowCircle();
             flowCircles59Lines[i].mapInit();
-            flowCircles59Lines[i].setDay(i+1);
+            flowCircles59Lines[i].setDay(i + 1);
         }
-        for (SingleFlowCircle s:list
-             ) {
-            if ("2".equals(s.getMonth())){
+        for (SingleFlowCircle s : list
+                ) {
+            if ("2".equals(s.getMonth())) {
                 //一根线   range 0-27
-                FlowCircle line=  flowCircles59Lines[Integer.valueOf(s.getDay())-1];
-                HashMap<String,Double> map=(HashMap<String, Double>) line.getTimeMap();
-                map.put(s.getHour(),s.getWeight());
-            }else {
+                FlowCircle line = flowCircles59Lines[Integer.valueOf(s.getDay()) - 1];
+                HashMap<String, Double> map = (HashMap<String, Double>) line.getTimeMap();
+                map.put(s.getHour(), s.getWeight());
+            } else {
                 //3月
-                FlowCircle line=  flowCircles59Lines[Integer.valueOf(s.getDay())+27];
-                Map map=line.getTimeMap();
-                map.put(s.getHour(),s.getWeight());
+                FlowCircle line = flowCircles59Lines[Integer.valueOf(s.getDay()) + 27];
+                Map map = line.getTimeMap();
+                map.put(s.getHour(), s.getWeight());
             }
         }
         responseData.setStatus(Status.OK.getStatus());
         responseData.setMsg(Message.OK.getMsg());
         responseData.setFlowLines(flowCircles59Lines);
+        return responseData;
+    }
+
+    @Override
+    public ResponseData queryAllRouteCircle() {
+        ResponseData responseData = new ResponseData();
+        List<RouteCityCircle> routeList = dao.queryAllRouteCircle();
+        for (RouteCityCircle c : routeList
+                ) {
+            //处理from
+            RouteCityCircle routeCityCircle = CIRCLE_MAP.get(c.getFromIndex());
+            if (routeCityCircle != null) {
+                c.setFromCentreLon(routeCityCircle.getTempCentreLon());
+                c.setFromCentreLat(routeCityCircle.getTempCentreLat());
+            }
+            //处理to
+            RouteCityCircle routeCityCircle1 = CIRCLE_MAP.get(c.getToIndex());
+            if (routeCityCircle1 != null) {
+                c.setToCentreLat(routeCityCircle1.getTempCentreLat());
+                c.setToCentreLon(routeCityCircle1.getTempCentreLon());
+            }
+
+        }
+        responseData.setMsg(Message.OK.getMsg());
+        responseData.setStatus(Status.OK.getStatus());
+        responseData.setRouteList(routeList);
         return responseData;
     }
 }

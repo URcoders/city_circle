@@ -65,5 +65,7 @@ public interface Dao {
     @Select("select idx from circle where id=#{id}")
     Integer queryIdxById(@Param("id") int id);
 
+    @Select("select from_idx as fromIndex,to_idx as toIndex,SUM(route_weight) as weight FROM route_circle_25 group by from_idx, to_idx")
+    List<RouteCityCircle> queryAllRouteCircle();
 
 }

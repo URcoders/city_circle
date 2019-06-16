@@ -59,9 +59,9 @@ public class Selector {
             log.warn("all none!");
         } else if (EmptyUtil.isEmpty(day) && flag) {
         } else if (!EmptyUtil.isEmpty(day) && !flag) {
-            sb.append("WHERE date_day=#{day}");
+            sb.append("WHERE date_day=#{day} order by route_weight");
         } else {
-            sb.append(" AND date_day=#{day}");
+            sb.append(" AND date_day=#{day} order by route_weight");
         }
         return sb.toString();
     }

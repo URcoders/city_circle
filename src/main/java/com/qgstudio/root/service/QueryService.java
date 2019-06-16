@@ -20,4 +20,6 @@ public interface QueryService {
     void updateCircleMap();
 
     ResponseData queryCircleFlow(int id);
+
+    ResponseData queryAllRouteCircle();
 }
