@@ -28,7 +28,7 @@ public class CircleQueryServiceImpl implements QueryService {
     private Dao dao;
 
     @Override
-    @Cacheable(key = "#condition.month+#condition.day+#condition.hour", cacheNames = "city_map", unless = "#result == null")
+    //@Cacheable(key = "#condition.month+#condition.day+#condition.hour", cacheNames = "city_map", unless = "#result == null")
     public ResponseData queryCircleData(RequestData condition) {
         ResponseData responseData = new ResponseData();
         if (EmptyUtil.isEmpty(condition)) {
@@ -164,6 +164,32 @@ public class CircleQueryServiceImpl implements QueryService {
         responseData.setMsg(Message.OK.getMsg());
         responseData.setStatus(Status.OK.getStatus());
         responseData.setRouteList(routeList);
+        return responseData;
+    }
+
+    @Override
+    public ResponseData queryAllCircle() {
+        ResponseData responseData = new ResponseData();
+        List<CityCircle> circleList;
+        try {
+            circleList = dao.queryCityCleAll();
+            //遍历转化，解析出区域经纬度
+            for (CityCircle c : circleList) {
+                c.transfer();
+            }
+            //do some transfer
+         /*   for (CityCircle c : circleList) {
+                c.compute();
+                dao.updateCentrePoint(c.getCentreLon(), c.getCentreLat(), c.getId());
+            }*/
+            responseData.setMsg(Message.OK.getMsg());
+            responseData.setStatus(Status.OK.getStatus());
+            responseData.setCircles(circleList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseData.setMsg(Message.ERROR.getMsg());
+            responseData.setStatus(Status.OK.getStatus());
+        }
         return responseData;
     }
 }

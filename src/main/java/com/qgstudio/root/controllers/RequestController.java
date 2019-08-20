@@ -21,6 +21,7 @@ public class RequestController {
 
     @PostMapping("/circle")
     public ResponseData getCircle(@RequestBody RequestData requestData) {
+
         return queryService.queryCircleData(requestData);
     }
 
@@ -38,6 +39,10 @@ public class RequestController {
             return "auth fail!";
         }
     }
+    @GetMapping("/queryAll")
+    public ResponseData queryAll(){
+        return queryService.queryAllCircle();
+    }
 
     @GetMapping("/queryflow")
     public ResponseData queryCircleFlow(@RequestParam("id") String id) {
@@ -51,5 +56,10 @@ public class RequestController {
             return responseData;
         }
         return queryService.queryCircleFlow(okId);
+    }
+
+    @GetMapping("/queryAllRoute")
+    public ResponseData queryAllRoute() {
+        return queryService.queryAllRouteCircle();
     }
 }

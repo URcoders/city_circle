@@ -37,6 +37,9 @@ public class Selector {
         sb.append(" ORDER BY weight");
         return sb.toString();
     }
+    public String selectCircleAll(){
+        return "SELECT * FROM circle_all  ORDER BY weight";
+    }
 
     public String selectRouteCircle(@Param("month") String month, @Param("day") String day, @Param("hour") String hour) {
         StringBuilder sb = new StringBuilder();

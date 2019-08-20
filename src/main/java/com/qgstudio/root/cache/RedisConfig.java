@@ -1,3 +1,4 @@
+/*
 package com.qgstudio.root.cache;
 
 
@@ -20,32 +21,40 @@ import java.util.Map;
 import java.util.Set;
 
 
+*/
 /**
  * @author linxu
  * @date 2019/2/28
  * 采用redis充当高速缓冲层；
- */
+ *//*
+
 
 @Configuration
 @EnableCaching
 @Slf4j
 public class RedisConfig extends CachingConfigurerSupport {
-    /**
+    */
+/**
      * 设置12小时的缓存时间
-     */
+     *//*
+
     private static final Duration TTL_HALF_DAY = Duration.ofHours(12);
-    /**
+    */
+/**
      * 设置30分钟的缓存时间
-     */
+     *//*
+
     private static final Duration TTL_HALF_HOUR = Duration.ofMinutes(30);
 
-    /**
+    */
+/**
      * from spring boot -data -redis 2.1.X
      *
      * @param factory f
      * @return cManager
      * 指定缓存管理器
-     */
+     *//*
+
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
@@ -85,12 +94,14 @@ public class RedisConfig extends CachingConfigurerSupport {
         return new GenericJackson2JsonRedisSerializer();
     }
 
-    /**
+    */
+/**
      * change the default template
      *
      * @param factory f
      * @return tem
-     */
+     *//*
+
 
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -108,3 +119,4 @@ public class RedisConfig extends CachingConfigurerSupport {
         return redisTemplate;
     }
 }
+*/
