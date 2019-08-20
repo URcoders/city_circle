@@ -192,4 +192,56 @@ public class CircleQueryServiceImpl implements QueryService {
         }
         return responseData;
     }
+
+    @Override
+    public ResponseData queryCircleByMonth(RequestData requestData) {
+        ResponseData responseData = new ResponseData();
+        List<CityCircle> circleList;
+        try {
+            circleList = dao.queryCityCleByMonth(requestData.getMonth().trim());
+            //遍历转化，解析出区域经纬度
+            for (CityCircle c : circleList) {
+                c.transfer();
+            }
+            //do some transfer
+         /*   for (CityCircle c : circleList) {
+                c.compute();
+                dao.updateCentrePoint(c.getCentreLon(), c.getCentreLat(), c.getId());
+            }*/
+            responseData.setMsg(Message.OK.getMsg());
+            responseData.setStatus(Status.OK.getStatus());
+            responseData.setCircles(circleList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseData.setMsg(Message.ERROR.getMsg());
+            responseData.setStatus(Status.OK.getStatus());
+        }
+        return responseData;
+    }
+
+    @Override
+    public ResponseData queryCircleByDay(RequestData requestData) {
+        ResponseData responseData = new ResponseData();
+        List<CityCircle> circleList;
+        try {
+            circleList = dao.queryCityCleByDay(requestData.getMonth().trim(),requestData.getDay().trim());
+            //遍历转化，解析出区域经纬度
+            for (CityCircle c : circleList) {
+                c.transfer();
+            }
+            //do some transfer
+         /*   for (CityCircle c : circleList) {
+                c.compute();
+                dao.updateCentrePoint(c.getCentreLon(), c.getCentreLat(), c.getId());
+            }*/
+            responseData.setMsg(Message.OK.getMsg());
+            responseData.setStatus(Status.OK.getStatus());
+            responseData.setCircles(circleList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseData.setMsg(Message.ERROR.getMsg());
+            responseData.setStatus(Status.OK.getStatus());
+        }
+        return responseData;
+    }
 }

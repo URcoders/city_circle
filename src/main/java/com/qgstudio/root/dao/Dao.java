@@ -37,6 +37,28 @@ public interface Dao {
             }
     )
     List<CityCircle> queryCityCleAll();
+    @SelectProvider(type = Selector.class, method = "selectCircleByMonth")
+    @Results(
+            {
+                    @Result(property = "id", column = "id"),
+                    @Result(property = "msg", column = "msg"),
+                    @Result(property = "weight", column = "weight"),
+                    @Result(property = "latAndLonCircle", column = "lat_lon_circle")
+            }
+    )
+    List<CityCircle> queryCityCleByMonth(@Param("month") String month);
+
+    @SelectProvider(type = Selector.class, method = "selectCircleByDay")
+    @Results(
+            {
+                    @Result(property = "id", column = "id"),
+                    @Result(property = "msg", column = "msg"),
+                    @Result(property = "weight", column = "weight"),
+                    @Result(property = "latAndLonCircle", column = "lat_lon_circle")
+            }
+    )
+    List<CityCircle> queryCityCleByDay(@Param("month") String month,@Param("day") String day);
+
     @UpdateProvider(type = Processor.class, method = "computeCentrePointLonAndLat")
     void updateCentrePoint(@Param("lon") double lon, @Param("lat") double lat, @Param("id") int id);
 

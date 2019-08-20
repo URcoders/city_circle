@@ -3,6 +3,7 @@ package com.qgstudio.root.service;
 import com.qgstudio.root.models.RequestData;
 import com.qgstudio.root.models.ResponseData;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @author linxu
@@ -16,6 +17,9 @@ public interface QueryService {
     ResponseData queryCircleData(RequestData condition);
 
     ResponseData queryAllCircle();
+
+    ResponseData queryCircleByMonth(RequestData requestData);
+    ResponseData queryCircleByDay(RequestData requestData);
 
     ResponseData queryRouteCircleData(RequestData condition);
 

@@ -41,6 +41,14 @@ public class Selector {
         return "SELECT * FROM circle_all  ORDER BY weight";
     }
 
+    public String selectCircleByMonth(@Param("month") String month){
+        return "SELECT * FROM circle_month WHERE date_month=#{month} ORDER BY weight";
+    }
+    public String selectCircleByDay(@Param("month") String month, @Param("day") String day){
+        return "SELECT * FROM circle_day WHERE date_month=#{month} AND date_day=#{day} ORDER BY weight ";
+
+    }
+
     public String selectRouteCircle(@Param("month") String month, @Param("day") String day, @Param("hour") String hour) {
         StringBuilder sb = new StringBuilder();
         sb.append(ROUTE_BASE_SQL);

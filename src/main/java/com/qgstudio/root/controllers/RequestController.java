@@ -39,11 +39,21 @@ public class RequestController {
             return "auth fail!";
         }
     }
+//**********************
     @GetMapping("/queryAll")
-    public ResponseData queryAll(){
+    public ResponseData queryAll() {
         return queryService.queryAllCircle();
     }
 
+    @GetMapping("/querymonth")
+    public ResponseData queryCircleByMonth(@RequestBody RequestData requestData) {
+        return queryService.queryCircleByMonth(requestData);
+    }
+    @GetMapping("/queryday")
+    public ResponseData queryCircleByDay(@RequestBody RequestData requestData){
+        return queryService.queryCircleByDay(requestData);
+    }
+//****************************************
     @GetMapping("/queryflow")
     public ResponseData queryCircleFlow(@RequestParam("id") String id) {
         Integer okId;
